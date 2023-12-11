@@ -11,7 +11,7 @@ function submitAttendance() {
     teacherEmail: document.getElementById("teacherEmail").value
   };
 
-  var url = "https://script.google.com/macros/s/AKfycbyg4L1JbNOdK4HffoyvNzwZXKX0X_sg7zisiEb2y2CZnbBN-3ywbbFoP7RHikNcPrnlzw/exec";
+  var url = "your google appscript path";
 
   fetch(url, {
     method: "POST",
