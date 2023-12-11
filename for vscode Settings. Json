@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Python Script",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/path/to/your/python/script.py",
+            "console": "integratedTerminal",
+            "args": [],
+            "env": {},
+            "cwd": "${workspaceFolder}",
+            "stopOnEntry": false,
+            "preLaunchTask": null,
+            "runtimeExecutable": null,
+            "runtimeArgs": [
+                "-u"
+            ],
+            "pythonPath": "${config:python.pythonPath}",
+            "debugOptions": [],
+            "exposeSettings": false,
+            "uiPath": "${config:python.uiPath}"
+        }
+    ]
+}
