@@ -26,6 +26,14 @@
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
+
+    // Check if the user is already authenticated
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (!user) {
+            // User is not signed in, redirect to the sign-in page
+            window.location.href = "index.html";
+        }
+    });
   </script>
 
   <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
@@ -135,23 +143,6 @@
   </div>
 
   <script type="module">
-    // Firebase initialization
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyB0k9eVwEIzRk4B3YOKvNhgppifMcOtAJc",
-      authDomain: "attendance-app-for-teachers.firebaseapp.com",
-      projectId: "attendance-app-for-teachers",
-      storageBucket: "attendance-app-for-teachers.appspot.com",
-      messagingSenderId: "518706942019",
-      appId: "1:518706942019:web:c06d6b50e207b9c0d604f6",
-      measurementId: "G-NXNQ6FHM1Z"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-
     // QR code scanner setup
     import Instascan from "https://rawgit.com/schmich/instascan-builds/master/instascan.min.js";
 
@@ -205,3 +196,4 @@
   </script>
 </body>
 </html>
+
