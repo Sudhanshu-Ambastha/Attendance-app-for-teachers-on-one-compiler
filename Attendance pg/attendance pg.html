@@ -1,15 +1,109 @@
+<!-- attendance.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
   <title>Teacher Attendance App</title>
+
+  <!-- Firebase initialization script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyB0k9eVwEIzRk4B3YOKvNhgppifMcOtAJc",
+      authDomain: "attendance-app-for-teachers.firebaseapp.com",
+      projectId: "attendance-app-for-teachers",
+      storageBucket: "attendance-app-for-teachers.appspot.com",
+      messagingSenderId: "518706942019",
+      appId: "1:518706942019:web:c06d6b50e207b9c0d604f6",
+      measurementId: "G-NXNQ6FHM1Z"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  </script>
+
+  <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+
+  <!-- Styles directly in the head -->
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 300px; /* Adjust the width as needed */
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 100%; /* Make input fields take up full width */
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%; /* Make button take up full width */
+      box-sizing: border-box;
+      margin-top: 10px; /* Add margin for separation */
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #response {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #0000ff;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h1>Teacher Attendance App</h1>
+
+    <!-- QR Code Scanner -->
+    <video id="scanner"></video>
+
+    <!-- Teacher Attendance Form -->
     <form id="attendanceForm">
+      <!-- Input fields for attendance data -->
       <label for="id">ID:</label>
       <input type="text" id="id" name="id" required>
 
@@ -32,7 +126,7 @@
       <input type="text" id="remarks" name="remarks" required>
 
       <label for="teacherEmail">Teacher Email:</label>
-      <input type="text" id="teacherEmail" name="teacherEmail" required>
+      <input type="email" id="teacherEmail" name="teacherEmail" required>
 
       <button type="button" onclick="submitAttendance()">Submit</button>
     </form>
@@ -40,6 +134,74 @@
     <div id="response"></div>
   </div>
 
-  <script src="script.js"></script>
+  <script type="module">
+    // Firebase initialization
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB0k9eVwEIzRk4B3YOKvNhgppifMcOtAJc",
+      authDomain: "attendance-app-for-teachers.firebaseapp.com",
+      projectId: "attendance-app-for-teachers",
+      storageBucket: "attendance-app-for-teachers.appspot.com",
+      messagingSenderId: "518706942019",
+      appId: "1:518706942019:web:c06d6b50e207b9c0d604f6",
+      measurementId: "G-NXNQ6FHM1Z"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    // QR code scanner setup
+    import Instascan from "https://rawgit.com/schmich/instascan-builds/master/instascan.min.js";
+
+    // Initialize QR code scanner
+    let scanner = new Instascan.Scanner({
+      video: document.getElementById('scanner'),
+    });
+
+    // Handle scan results
+    scanner.addListener('scan', function (content) {
+      // Handle the scanned content (send to Google Sheet, etc.)
+      console.log('Scanned:', content);
+    });
+
+    // Start scanning when the page is loaded
+    Instascan.Camera.getCameras().then(function (cameras) {
+      if (cameras.length > 0) {
+        scanner.start(cameras[0]);
+      } else {
+        console.error('No cameras found.');
+      }
+    });
+
+    // Submit attendance function
+    function submitAttendance() {
+      var formData = {
+        id: document.getElementById("id").value,
+        route: document.getElementById("route").value,
+        morningStudentsPresent: document.getElementById("morningStudentsPresent").value,
+        morningStudentsAbsent: document.getElementById("morningStudentsAbsent").value,
+        eveningStudentsPresent: document.getElementById("eveningStudentsPresent").value,
+        eveningStudentsAbsent: document.getElementById("eveningStudentsAbsent").value,
+        remarks: document.getElementById("remarks").value,
+        teacherEmail: document.getElementById("teacherEmail").value
+      };
+
+      var url = "https://script.google.com/macros/s/AKfycbyg4L1JbNOdK4HffoyvNzwZXKX0X_sg7zisiEb2y2CZnbBN-3ywbbFoP7RHikNcPrnlzw/exec";
+
+      fetch(url, {
+        method: "POST",
+        body: new URLSearchParams(formData),
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
+      })
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("response").textContent = data;
+      });
+    }
+  </script>
 </body>
 </html>
