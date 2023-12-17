@@ -1,85 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <title>Teacher Attendance App</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML to Sheets</title>
+       <script src="https://cdn.tailwindcss.com" defer></script>
 </head>
 <body>
-  <div class="container">
-    <h1>Teacher Attendance App</h1>
+        <div class="flex items-center h-screen w-full bg-orange-100">
+      <div class="w-full bg-white rounded shadow-lg p-8 m-4 md:max-w-sm md:mx-auto">
+        <h1 class="block w-full text-center text-grey-darkest mb-6">Attendance</h1>
 
-    <!-- Google Form iframe -->
-    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe87hLtotZBv4YGjVm-pdWeQYxbOrkzCjKi7aCNytDdB2lV8A/viewform?embedded=true" width="640" height="1225" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
-
-    <!-- Teacher Attendance Form -->
-    <form id="attendanceForm">
-      <!-- ... (remaining form fields) -->
-      <button type="button" onclick="submitAttendance()">Submit</button>
-    </form>
-
-    <div id="response"></div>
+        <form class="mb-4 flex flex-wrap justify-between" id="form">
+  
+       
+          <div class="flex flex-col w-full mb-4">
+            <label class="field-label" for="email">Id</label>
+            <input class="bg-green-100 px-2 py-1 outline-none" type="text" name="Id" id="email">
+          </div>
+          <div class="flex flex-col w-full mb-4">
+            <label class="field-label" for="email">TeacherEmail</label>
+            <input class="bg-green-100 px-2 py-1 outline-none" type="email" name="Email" id="email">
+          </div>
+          <div class="flex flex-col w-full mb-4">
+            <label class="field-label" for="email">MorningStudentsPresent</label>
+            <input class="bg-green-100 px-2 py-1 outline-none" type="text" name="morningStudentsPresent" id="email">
+          </div>
+          <div class="flex flex-col w-full mb-4">
+            <label class="field-label" for="email">MorningStudentsAbsent</label>
+            <input class="bg-green-100 px-2 py-1 outline-none" type="text" name="morningStudentsAbsent" id="email">
+          </div>
+          <div class="flex flex-col w-full mb-4">
+            <label class="field-label" for="email">EveningStudentsPresent</label>
+            <input class="bg-green-100 px-2 py-1 outline-none" type="text" name="eveningStudentsPresent" id="email">
+          </div>
+          <div class="flex flex-col w-full mb-4">
+            <label class="field-label" for="email">EveningStudentsAbsent</label>
+            <input class="bg-green-100 px-2 py-1 outline-none" type="text" name="eveningStudentsAbsent" id="email">
+          </div>
+          <div class="flex flex-col w-full mb-4">
+            <label class="field-label" for="email">Remarks</label>
+            <input class="bg-green-100 px-2 py-1 outline-none" type="text" name="morningStudentsPresent" id="email">
+          </div>
+          <button class="bg-orange-300 px-3 py-1 text-white mx-auto" type="submit" id="submit">Submit</button>
+        </form>
+    </div>
   </div>
 
-  <script src="script.js"></script>
 </body>
+
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzLpY79L-zd_oyCuA5Yr54B9qldDbfJLybaCpWp4rKoYXvFjjzTOKfKSTeE6QjMJKXhgg/exec'
+    const form = document.querySelector('#form')
+    const btn = document.querySelector('#submit')
+
+
+    form.addEventListener('submit', e => {
+      e.preventDefault()
+      btn.disabled = true
+      btn.innerHTML = "Loading..."
+
+      console.log(form)
+      fetch(scriptURL, { method: 'POST', body: new FormData(form) })
+        .then(response => { 
+              btn.disabled = false
+      btn.innerHTML = "Submit"
+            alert('Success!', response) })
+        .catch(error => {
+                     btn.disabled = false
+      btn.innerHTML = "Submit"
+            alert('Error!', error.message)})
+    })
+</script>
 </html>
-
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f4f4f4;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-}
-
-.container {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  margin-bottom: 20px; /* Add margin to separate Google Form and Attendance Form */
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: center;
-}
-
-/* ... (remaining CSS styles) */
-
-function submitAttendance() {
-  var formData = {
-    action: "in",
-    id: document.getElementById("id").value,
-    route: document.getElementById("route").value,
-    morningStudentsPresent: document.getElementById("morningStudentsPresent").value,
-    morningStudentsAbsent: document.getElementById("morningStudentsAbsent").value,
-    eveningStudentsPresent: document.getElementById("eveningStudentsPresent").value,
-    eveningStudentsAbsent: document.getElementById("eveningStudentsAbsent").value,
-    remarks: document.getElementById("remarks").value,
-    teacherEmail: document.getElementById("teacherEmail").value
-  };
-
-  var url = "https://script.google.com/macros/s/AKfycbyg4L1JbNOdK4HffoyvNzwZXKX0X_sg7zisiEb2y2CZnbBN-3ywbbFoP7RHikNcPrnlzw/exec";
-
-  fetch(url, {
-    method: "POST",
-    body: new URLSearchParams(formData),
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    }
-  })
-  .then(response => response.text())
-  .then(data => {
-    document.getElementById("response").textContent = data;
-  });
-}
