@@ -106,7 +106,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Combined Attendance App</h1>
+    <h1>Attendance App</h1>
 
     <!-- QR Code Scanner -->
     <video id="scanner"></video>
@@ -117,7 +117,23 @@
       <label for="route">Route:</label>
       <input type="text" id="route" name="route" required>
 
-      <!-- Add other input fields as needed for attendance data -->
+      <label for="morningStudentsPresent">Morning Students Present:</label>
+      <input type="text" id="morningStudentsPresent" name="morningStudentsPresent" required>
+
+      <label for="morningStudentsAbsent">Morning Students Absent:</label>
+      <input type="text" id="morningStudentsAbsent" name="morningStudentsAbsent" required>
+
+      <label for="eveningStudentsPresent">Evening Students Present:</label>
+      <input type="text" id="eveningStudentsPresent" name="eveningStudentsPresent" required>
+
+      <label for="eveningStudentsAbsent">Evening Students Absent:</label>
+      <input type="text" id="eveningStudentsAbsent" name="eveningStudentsAbsent" required>
+
+      <label for="remarks">Remarks:</label>
+      <input type="text" id="remarks" name="remarks" required>
+
+      <label for="teacherEmail">Teacher Email:</label>
+      <input type="email" id="teacherEmail" name="teacherEmail" required>
 
       <button type="button" onclick="submitAttendance()">Submit</button>
     </form>
@@ -138,9 +154,6 @@
     scanner.addListener('scan', function (content) {
       // Handle the scanned content (send to Google Sheet, etc.)
       console.log('Scanned:', content);
-
-      // You can use the scanned content to populate the form fields or take other actions.
-      // For example, split the content into two QR codes for in-time and out-time.
     });
 
     // Start scanning when the page is loaded
@@ -153,38 +166,41 @@
     });
 
     // Submit attendance function
-function submitAttendance() {
-  var formData = {
-    route: document.getElementById("route").value,
-    morningStudentsPresent: document.getElementById("morningStudentsPresent").value,
-    morningStudentsAbsent: document.getElementById("morningStudentsAbsent").value,
-    eveningStudentsPresent: document.getElementById("eveningStudentsPresent").value,
-    eveningStudentsAbsent: document.getElementById("eveningStudentsAbsent").value,
-    remarks: document.getElementById("remarks").value,
-    teacherEmail: document.getElementById("teacherEmail").value
-    // Add other form field values as needed
-  };
+    function submitAttendance() {
+      var formData = {
+        route: document.getElementById("route").value,
+        morningStudentsPresent: document.getElementById("morningStudentsPresent").value,
+        morningStudentsAbsent: document.getElementById("morningStudentsAbsent").value,
+        eveningStudentsPresent: document.getElementById("eveningStudentsPresent").value,
+        eveningStudentsAbsent: document.getElementById("eveningStudentsAbsent").value,
+        remarks: document.getElementById("remarks").value,
+        teacherEmail: document.getElementById("teacherEmail").value
+        // Add other form field values as needed
+      };
 
-  var url = "https://script.google.com/macros/s/AKfycbyg4L1JbNOdK4HffoyvNzwZXKX0X_sg7zisiEb2y2CZnbBN-3ywbbFoP7RHikNcPrnlzw/exec";
+      var url = "https://script.google.com/macros/s/AKfycbyg4L1JbNOdK4HffoyvNzwZXKX0X_sg7zisiEb2y2CZnbBN-3ywbbFoP7RHikNcPrnlzw/exec";
 
-  // Display loading state
-  document.getElementById("response").textContent = "Loading...";
+      // Display loading state
+      document.getElementById("response").textContent = "Loading...";
 
-  // Submit the form data
-  fetch(url, {
-    method: "POST",
-    body: new URLSearchParams(formData),
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
+      // Submit the form data
+      fetch(url, {
+        method: "POST",
+        body: new URLSearchParams(formData),
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
+      })
+      .then(response => response.text())
+      .then(data => {
+        // Display success message or error
+        document.getElementById("response").textContent = data;
+      })
+      .catch(error => {
+        // Display error message
+        document.getElementById("response").textContent = "Error: " + error.message;
+      });
     }
-  })
-  .then(response => response.text())
-  .then(data => {
-    // Display success message or error
-    document.getElementById("response").textContent = data;
-  })
-  .catch(error => {
-    // Display error message
-    document.getElementById("response").textContent = "Error: " + error.message;
-  });
-}
+  </script>
+</body>
+</html>
